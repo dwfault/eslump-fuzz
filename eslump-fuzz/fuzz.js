@@ -1,6 +1,5 @@
 "use strict";
 
-//const eslint = require('../eslint');
 const eslump = require('eslump');
 
 const child_process = require('child_process');
