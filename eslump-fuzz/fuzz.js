@@ -29,37 +29,22 @@ function Run() {
 			let outputFileName = RandomString16() + '.js';
 
 			fs.writeFile('output/' + outputFileName, GenJS(), function () {
-				
-				//spawn
-				let childSpawn = child_process.spawn('node', ['./fuzz-child.js',outputFileName]);
-				childSpawn.stdout.on('data',function(data){
-					console.log('[+] child stdout:'+data);
+
+				let childSpawn = child_process.spawn('node', ['./fuzz-child.js', outputFileName, binPath], { detached: true });
+				childSpawn.stdout.on('data', function (data) {
+					console.log('[+] child stdout:' + data);
 				});
-				childSpawn.stderr.on('data',function(data){
-					console.log('[+] child stdout:'+data);
+				childSpawn.stderr.on('data', function (data) {
+					console.log('[+] child stdout:' + data);
 				});
-				childSpawn.on('error',(err)=>{
+				childSpawn.on('error', (err) => {
 					console.log('[+] Failed to start child process.');
 					console.log(err);
 				});
-				/*
-				let options = { timeout: 10000 };
-				let jscExec = exec(binPath + ' ' + 'output/' + outputFileName, options);
-				jscExec.stdout.on('data', function (data) {
-					console.log('[+] stdout:' + data);
-					let rmExec = exec('rm output/' + outputFileName);
-				});
-				jscExec.stderr.on('data', function (data) {
-					console.log('[-] stderr:' + data);
-					if(data.indexOf('AddressSanitizer')!=-1)
-						exec('mv output/' + outputFileName + ' crash/' + outputFileName);
-					else
-						exec('rm output/' + outputFileName);
-				});
-				*/
+				childSpawn.on('close', (code => { }));
 			});
 		}
-		setTimeout(loop,timeout);
+		setTimeout(loop, timeout);
 	}
 	loop();
 }
@@ -92,10 +77,13 @@ function Init() {
 }
 
 
+//	~/Desktop/webkit-320b1fc/bin/jsc
+//	~/Desktop/gecko-dev-afl/js/src/build_DBG.OBJ/js/src/shell
 const binPath = "cat";
+
 console.log('[+] Javascript Engine path:' + binPath + '\n');
-const timeout = 5000;
-const iteratorCount = 100;
+const timeout = 15000;
+const iteratorCount = 300;
 Init();
 Run();
 
