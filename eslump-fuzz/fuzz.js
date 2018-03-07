@@ -29,7 +29,7 @@ function Run() {
 			let outputFileName = RandomString16() + '.js';
 
 			fs.writeFile('output/' + outputFileName, GenJS(), function () {
-
+				
 				let childSpawn = child_process.spawn('node', ['./fuzz-child.js', outputFileName, binPath], { detached: true });
 				childSpawn.stdout.on('data', function (data) {
 					console.log('[+] child stdout:' + data);
@@ -81,7 +81,7 @@ function Init() {
 //	~/Desktop/gecko-dev-afl/js/src/build_DBG.OBJ/js/src/shell
 const binPath = "cat";
 
-console.log('[+] Javascript Engine path:' + binPath + '\n');
+console.log('[+] Javascript engine path:' + binPath + '\n');
 const timeout = 15000;
 const iteratorCount = 300;
 Init();
